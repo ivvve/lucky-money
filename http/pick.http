@@ -1,0 +1,4 @@
+PATCH http://localhost:8080/api/sprinkling-money/wqi
+Content-Type: application/json
+X-USER-ID: chris2
+X-ROOM-ID: room

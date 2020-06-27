@@ -1,0 +1,4 @@
+GET http://localhost:8080/api/sprinkling-money/wqi
+Content-Type: application/json
+X-USER-ID: chris
+X-ROOM-ID: room

@@ -1,0 +1,9 @@
+POST http://localhost:8080/api/sprinkling-money
+Content-Type: application/json
+X-USER-ID: chris
+X-ROOM-ID: room
+
+{
+  "sprinkledMoney": 100,
+  "numberOfRoomMembers": 5
+}
