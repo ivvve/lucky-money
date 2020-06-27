@@ -26,7 +26,7 @@ public class SprinkleMoneyAcceptanceTest extends AcceptanceTestBase {
             // when
             final MvcResult response = mockMvc
                     .perform(post("/api/sprinkling-money")
-                            .header("X-USER-ID", TEST_USER_ID)
+                            .header("X-USER-ID", TEST_USER_ID1)
                             .header("X-ROOM-ID", TEST_ROOM_ID)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new SprinkleMoneyRequest(100, 5)))
@@ -50,7 +50,7 @@ public class SprinkleMoneyAcceptanceTest extends AcceptanceTestBase {
             // when
             final MvcResult response = mockMvc
                     .perform(post("/api/sprinkling-money")
-                            .header("X-USER-ID", TEST_USER_ID)
+                            .header("X-USER-ID", TEST_USER_ID1)
                             .header("X-ROOM-ID", TEST_ROOM_ID)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new SprinkleMoneyRequest(100, numberOfRoomMembers)))
@@ -64,7 +64,7 @@ public class SprinkleMoneyAcceptanceTest extends AcceptanceTestBase {
             // then
             final SprinkledMoney sprinkledMoney = sprinkledMoneyRepository.findByToken(new Token(token)).get();
             assertThat(sprinkledMoney.getToken().getValue()).isEqualTo(token);
-            assertThat(sprinkledMoney.getUserId()).isEqualTo(TEST_USER_ID);
+            assertThat(sprinkledMoney.getUserId()).isEqualTo(TEST_USER_ID1);
             assertThat(sprinkledMoney.getRoomId()).isEqualTo(TEST_ROOM_ID);
             assertThat(sprinkledMoney.getPickedMoneys()).hasSize(numberOfRoomMembers);
         }

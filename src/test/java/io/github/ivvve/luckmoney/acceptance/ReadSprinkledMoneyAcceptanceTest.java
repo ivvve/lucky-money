@@ -24,7 +24,7 @@ public class ReadSprinkledMoneyAcceptanceTest extends AcceptanceTestBase {
         void api_application_responses_token_with_its_length_is_3() throws Exception {
             // given
             final int moneyAmount = 1;
-            saveSprinkledMoney(TEST_TOKEN.getValue(), TEST_USER_ID, TEST_ROOM_ID, Arrays.asList(moneyAmount));
+            saveSprinkledMoney(TEST_TOKEN.getValue(), TEST_USER_ID1, TEST_ROOM_ID, Arrays.asList(moneyAmount));
 
             final String pickerUserId = "picker";
             pickSprinkledMoney(TEST_TOKEN.getValue(), pickerUserId);
@@ -32,7 +32,7 @@ public class ReadSprinkledMoneyAcceptanceTest extends AcceptanceTestBase {
             // when
             final MvcResult response = mockMvc
                     .perform(get("/api/sprinkling-money/" + TEST_TOKEN.getValue())
-                            .header("X-USER-ID", TEST_USER_ID)
+                            .header("X-USER-ID", TEST_USER_ID1)
                             .header("X-ROOM-ID", TEST_ROOM_ID)
                     )
                     .andDo(print())
@@ -53,9 +53,9 @@ public class ReadSprinkledMoneyAcceptanceTest extends AcceptanceTestBase {
     void only_sprinkled_user_can_read() throws Exception {
         // given
         final int moneyAmount = 1;
-        saveSprinkledMoney(TEST_TOKEN.getValue(), TEST_USER_ID, TEST_ROOM_ID, Arrays.asList(moneyAmount));
+        saveSprinkledMoney(TEST_TOKEN.getValue(), TEST_USER_ID1, TEST_ROOM_ID, Arrays.asList(moneyAmount));
 
-        final String pickerUserId = "picker";
+        final String pickerUserId = TEST_USER_ID2;
         pickSprinkledMoney(TEST_TOKEN.getValue(), pickerUserId);
 
         // when
@@ -73,12 +73,12 @@ public class ReadSprinkledMoneyAcceptanceTest extends AcceptanceTestBase {
     void user_cant_read_sprinkled_money_after_a_week() throws Exception {
         // given
         final int moneyAmount = 1;
-        saveSprinkledMoney(TEST_TOKEN.getValue(), TEST_USER_ID, TEST_ROOM_ID, Arrays.asList(moneyAmount), LocalDateTime.now().minusWeeks(1).minusSeconds(1));
+        saveSprinkledMoney(TEST_TOKEN.getValue(), TEST_USER_ID1, TEST_ROOM_ID, Arrays.asList(moneyAmount), LocalDateTime.now().minusWeeks(1).minusSeconds(1));
 
         // when
         mockMvc
                 .perform(get("/api/sprinkling-money/" + TEST_TOKEN.getValue())
-                        .header("X-USER-ID", TEST_USER_ID)
+                        .header("X-USER-ID", TEST_USER_ID1)
                         .header("X-ROOM-ID", TEST_ROOM_ID)
                 )
                 .andDo(print())

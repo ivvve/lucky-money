@@ -5,6 +5,7 @@ import io.github.ivvve.luckmoney.domain.PickedMoney;
 import io.github.ivvve.luckmoney.domain.SprinkledMoney;
 import io.github.ivvve.luckmoney.domain.token.Token;
 import io.github.ivvve.luckmoney.ui.request.SprinkleMoneyRequest;
+import io.github.ivvve.luckmoney.ui.request.SprinklingMoneyRequestHeader;
 import io.github.ivvve.luckmoney.ui.response.PickSprinkledMoneyResponse;
 import io.github.ivvve.luckmoney.ui.response.ReadSprinkledMoneyResponse;
 import io.github.ivvve.luckmoney.ui.response.SprinkleMoneyResponse;
@@ -30,25 +31,28 @@ public class SprinklingMoneyController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public SprinkleMoneyResponse sprinkleMoney(
-            // TODO header validation not working
-            @Valid @RequestHeader("X-USER-ID") @NotBlank @Pattern(regexp = "^[0-9]*$") final String userId,
-            @Valid @RequestHeader("X-ROOM-ID") @NotBlank final String roomId,
+            @RequestHeader("X-USER-ID") final String userId, @RequestHeader("X-ROOM-ID") final String roomId,
             @Valid @RequestBody final SprinkleMoneyRequest request
     ) {
-        final SprinkledMoney sprinkledMoney =
-                this.sprinklingMoneyService.sprinkle(userId, roomId, request.sprinkledMoney, request.numberOfRoomMembers);
+        // TODO Controller에 custom annotation을 사용하여 처리
+        final SprinklingMoneyRequestHeader requestHeader = new SprinklingMoneyRequestHeader(userId, roomId);
+
+        final SprinkledMoney sprinkledMoney = this.sprinklingMoneyService
+                .sprinkle(requestHeader.userId, requestHeader.roomId, request.sprinkledMoney, request.numberOfRoomMembers);
         return new SprinkleMoneyResponse(sprinkledMoney.getTokenValue());
     }
 
     @PatchMapping("/{token}")
     @ResponseStatus(HttpStatus.OK)
     public PickSprinkledMoneyResponse pickSprinkledMoney(
-            // TODO header validation not working
-            @Valid @RequestHeader("X-USER-ID") @NotBlank @Pattern(regexp = "^[0-9]*$") final String userId,
-            @Valid @RequestHeader("X-ROOM-ID") @NotBlank final String roomId,
+            @RequestHeader("X-USER-ID") final String userId, @RequestHeader("X-ROOM-ID") final String roomId,
             @Valid @PathVariable("token") @Length(min = Token.SIZE, max = Token.SIZE) final String token
     ) {
-        final SprinkledMoney sprinkledMoney = this.sprinklingMoneyService.pick(userId, roomId, token);
+        // TODO Controller에 custom annotation을 사용하여 처리
+        final SprinklingMoneyRequestHeader requestHeader = new SprinklingMoneyRequestHeader(userId, roomId);
+
+        final SprinkledMoney sprinkledMoney =
+                this.sprinklingMoneyService.pick(requestHeader.userId, requestHeader.roomId, token);
         final PickedMoney pickedMoney = sprinkledMoney.getPickedMoneys().stream()
                 .filter(picked -> Objects.equals(picked.getPickerUserId(), userId))
                 .findFirst()
@@ -60,12 +64,13 @@ public class SprinklingMoneyController {
     @GetMapping("/{token}")
     @ResponseStatus(HttpStatus.OK)
     public ReadSprinkledMoneyResponse readSprinkledMoney(
-            // TODO header validation not working
-            @Valid @RequestHeader("X-USER-ID") @NotBlank @Pattern(regexp = "^[0-9]*$") final String userId,
-            @Valid @RequestHeader("X-ROOM-ID") @NotBlank final String roomId,
+            @RequestHeader("X-USER-ID") final String userId, @RequestHeader("X-ROOM-ID") final String roomId,
             @Valid @PathVariable("token") @Length(min = Token.SIZE, max = Token.SIZE) final String token
     ) {
-        final SprinkledMoney sprinkledMoney = this.sprinklingMoneyService.read(userId, token);
+        // TODO Controller에 custom annotation을 사용하여 처리
+        final SprinklingMoneyRequestHeader requestHeader = new SprinklingMoneyRequestHeader(userId, roomId);
+
+        final SprinkledMoney sprinkledMoney = this.sprinklingMoneyService.read(requestHeader.userId, token);
 
         int sprinkledMoneyAmount = 0;
         int pickedMoneyAmount = 0;

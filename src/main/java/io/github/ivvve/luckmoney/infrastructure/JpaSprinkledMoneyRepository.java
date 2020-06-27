@@ -35,10 +35,10 @@ public class JpaSprinkledMoneyRepository implements SprinkledMoneyRepository {
     }
 
     @Override
-    public Optional<SprinkledMoney> findByTokenAndUserIdWithinWeek(final Token token, final String userId) {
+    public Optional<SprinkledMoney> findAllByTokenAndUserIdAndSprinkledAtAfter(final Token token, final String userId,
+                                                                               final LocalDateTime sprinkledAt) {
         try {
-            final LocalDateTime aWeekAgo = LocalDateTime.now().minusWeeks(1);
-            return this.repository.findAllByTokenAndUserIdAndSprinkledAtAfter(token, userId, aWeekAgo);
+            return this.repository.findAllByTokenAndUserIdAndSprinkledAtAfter(token, userId, sprinkledAt);
         } catch (final Exception e) {
             throw new SprinkledMoneyDataFailed(e);
         }
@@ -46,5 +46,6 @@ public class JpaSprinkledMoneyRepository implements SprinkledMoneyRepository {
 }
 
 interface InnerJpaSprinkledMoneyRepository extends JpaRepository<SprinkledMoney, Token> {
-    Optional<SprinkledMoney> findAllByTokenAndUserIdAndSprinkledAtAfter(final Token token, final String userId, final LocalDateTime sprinkledAt);
+    Optional<SprinkledMoney> findAllByTokenAndUserIdAndSprinkledAtAfter(final Token token, final String userId,
+                                                                        final LocalDateTime sprinkledAt);
 }

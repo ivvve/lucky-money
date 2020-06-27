@@ -8,11 +8,14 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SprinkledMoneyTest {
@@ -167,6 +170,16 @@ class SprinkledMoneyTest {
         }
     }
 
+    @Nested @DisplayName("getReadExpireTime method")
+    class getReadExpireTime_method {
+
+        @Test @DisplayName("returns read expire time and it's a week ago")
+        void returns_read_expire_time() {
+            final LocalDateTime readExpireTime = SprinkledMoney.getReadExpireTime();
+            assertThat(readExpireTime).isCloseTo(LocalDateTime.now().minusWeeks(1), within(1, ChronoUnit.SECONDS));
+        }
+    }
+
     @Nested @DisplayName("pickedBy method")
     class pickedBy_method {
 
@@ -183,7 +196,7 @@ class SprinkledMoneyTest {
         @Nested @DisplayName("when SprinkledMoney is expired to pick")
         class when_sprinkled_money_is_expired_to_pick {
             final SprinkledMoney expiredSprinkledMoney = newTestSprinkledMoney(Arrays.asList(1),
-                    LocalDateTime.now().minusMinutes(SprinkledMoney.EXPIRE_MINUTE).minusMinutes(1));
+                    LocalDateTime.now().minusMinutes(SprinkledMoney.PICK_EXPIRE_MINUTES).minusMinutes(1));
 
             @Test @DisplayName("throws SprinkledMoneyExpired")
             void throws_CannotPickSprinkledMoney() {

@@ -48,7 +48,8 @@ public class SprinklingMoneyService {
 
     @Transactional(readOnly = true)
     public SprinkledMoney read(final String userId, final String token) {
-        return this.sprinkledMoneyRepository.findByTokenAndUserIdWithinWeek(new Token(token), userId)
+        return this.sprinkledMoneyRepository
+                .findAllByTokenAndUserIdAndSprinkledAtAfter(new Token(token), userId, SprinkledMoney.getReadExpireTime())
                 .orElseThrow(SprinkledMoneyNotFound::new);
     }
 }

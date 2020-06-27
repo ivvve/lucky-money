@@ -22,7 +22,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = "token")
 public class SprinkledMoney {
-    public static final int EXPIRE_MINUTE = 10;
+    public static final int PICK_EXPIRE_MINUTES = 10;
+    public static final int READ_EXPIRE_DAYS = 7;
 
     @EmbeddedId
     private Token token;
@@ -63,18 +64,8 @@ public class SprinkledMoney {
         this.sprinkledAt = sprinkledAt;
     }
 
-    private static void validate(final String userId, final String roomId, final List<Money> monies) {
-        if (StringUtils.isBlank(userId)) {
-            throw new InvalidUserId();
-        }
-
-        if (StringUtils.isBlank(roomId)) {
-            throw new InvalidRoomId();
-        }
-
-        if (Objects.isNull(monies) || monies.isEmpty()) {
-            throw new InvalidMoneys();
-        }
+    public static LocalDateTime getReadExpireTime() {
+        return LocalDateTime.now().minusDays(SprinkledMoney.READ_EXPIRE_DAYS);
     }
 
     public String getTokenValue() {
@@ -102,8 +93,22 @@ public class SprinkledMoney {
         unpickedMoney.pickedBy(pickerUserId);
     }
 
+    private static void validate(final String userId, final String roomId, final List<Money> monies) {
+        if (StringUtils.isBlank(userId)) {
+            throw new InvalidUserId();
+        }
+
+        if (StringUtils.isBlank(roomId)) {
+            throw new InvalidRoomId();
+        }
+
+        if (Objects.isNull(monies) || monies.isEmpty()) {
+            throw new InvalidMoneys();
+        }
+    }
+
     private boolean isExpired() {
-        final LocalDateTime expiredTime = this.sprinkledAt.plusMinutes(EXPIRE_MINUTE);
+        final LocalDateTime expiredTime = this.sprinkledAt.plusMinutes(PICK_EXPIRE_MINUTES);
         return LocalDateTime.now().isAfter(expiredTime);
     }
 

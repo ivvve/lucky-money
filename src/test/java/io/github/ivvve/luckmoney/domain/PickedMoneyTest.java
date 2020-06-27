@@ -40,7 +40,7 @@ class PickedMoneyTest {
 
     @Nested @DisplayName("pickedBy method")
     class pickedBy_method {
-        final String pickerUserId = "picker";
+        final String pickerUserId = "00001";
 
         @Nested @DisplayName("when PickMoney is picked")
         class when_already_picked {
@@ -54,7 +54,7 @@ class PickedMoneyTest {
 
         @Nested @DisplayName("when PickMoney is not picked")
         class when_PickMoney_is_not_picked {
-            final String pickerUserId = "user";
+            final String pickerUserId = "00001";
 
             @Test @DisplayName("sets pickerUserId")
             void setsPickerUserId() {
@@ -80,7 +80,7 @@ class PickedMoneyTest {
 
     @Nested @DisplayName("isPickedBy method")
     class isPickedBy_method {
-        final String pickerUserId = "picker";
+        final String pickerUserId = "00001";
 
         @Nested @DisplayName("when there's no user picked")
         class when_theres_no_user_picked {

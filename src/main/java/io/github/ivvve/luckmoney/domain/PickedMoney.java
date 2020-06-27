@@ -35,12 +35,6 @@ public class PickedMoney {
         return this.money.getAmount();
     }
 
-    private static void validate(final Money money) {
-        if (Objects.isNull(money)) {
-            throw new InvalidMoney();
-        }
-    }
-
     void pickedBy(final String pickerUserId) {
         if (this.isPicked()) {
             throw new CannotPickSprinkledMoney();
@@ -60,5 +54,11 @@ public class PickedMoney {
 
     boolean isNotPicked() {
         return !this.isPicked();
+    }
+
+    private static void validate(final Money money) {
+        if (Objects.isNull(money)) {
+            throw new InvalidMoney();
+        }
     }
 }

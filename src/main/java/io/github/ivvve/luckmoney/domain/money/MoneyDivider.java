@@ -30,14 +30,16 @@ public abstract class MoneyDivider {
             throw new RuntimeException(LOGIC_ERROR_MESSAGE);
         }
 
-        final int sumOfDividedMoneys = dividedMoneys.stream().mapToInt(Money::getAmount).sum();
-
-        if (sumOfDividedMoneys != money.getAmount()) {
-            throw new RuntimeException(LOGIC_ERROR_MESSAGE);
-        }
-
         if (dividedMoneys.size() != by) {
             throw new RuntimeException(LOGIC_ERROR_MESSAGE);
         }
+
+        if (getSumOfMoneys(dividedMoneys) != money.getAmount()) {
+            throw new RuntimeException(LOGIC_ERROR_MESSAGE);
+        }
+    }
+
+    private static int getSumOfMoneys(final List<Money> moneys) {
+        return moneys.stream().mapToInt(Money::getAmount).sum();
     }
 }

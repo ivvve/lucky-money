@@ -22,7 +22,8 @@ import java.util.stream.Collectors;
 @Transactional
 public class AcceptanceTestBase {
     static final Token TEST_TOKEN = new Token("abc");
-    static final String TEST_USER_ID = "test_user";
+    static final String TEST_USER_ID1 = "00001";
+    static final String TEST_USER_ID2 = "00002";
     static final String TEST_ROOM_ID = "test_room";
 
     @Autowired MockMvc mockMvc;

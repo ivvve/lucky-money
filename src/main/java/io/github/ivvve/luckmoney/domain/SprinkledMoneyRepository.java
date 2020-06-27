@@ -2,6 +2,7 @@ package io.github.ivvve.luckmoney.domain;
 
 import io.github.ivvve.luckmoney.domain.token.Token;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface SprinkledMoneyRepository {
@@ -9,5 +10,6 @@ public interface SprinkledMoneyRepository {
 
     Optional<SprinkledMoney> findByToken(final Token token);
 
-    Optional<SprinkledMoney> findByTokenAndUserIdWithinWeek(final Token token, final String roomId);
+    Optional<SprinkledMoney> findAllByTokenAndUserIdAndSprinkledAtAfter(final Token token, final String roomId,
+                                                                        final LocalDateTime sprinkledAt);
 }
